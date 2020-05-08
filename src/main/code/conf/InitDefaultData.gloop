@@ -1,0 +1,115 @@
+{
+    "output": [
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "QuestionType",
+                    "type": "model",
+                    "reference": "model.question.QuestionType"
+                }
+            ]
+        }
+    ],
+    "steps": [
+        {
+            "type": "fork",
+            "expression": "'init.default.data'.getPackageProperty()",
+            "children": [
+                {
+                    "type": "block",
+                    "label": "false",
+                    "children": [
+                        {
+                            "declare": [
+                                {
+                                    "variables": [
+                                        {
+                                            "name": "questionType",
+                                            "type": "model",
+                                            "array": true,
+                                            "reference": "model.question.QuestionType"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "questionType {\n\ttype \"Checkboxes\"\n}\n\nquestionType {\n\ttype \"Multiple Choice\"\n}\n",
+                                    "evaluate": true,
+                                    "to": [
+                                        "questionType"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "iterate",
+                            "input": {
+                                "path": [
+                                    "questionType"
+                                ]
+                            },
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "services.question.QuestionType.AddQuestionType",
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "questionType",
+                                                "type"
+                                            ],
+                                            "to": [
+                                                "question_type",
+                                                "type"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "response"
+                                            ],
+                                            "to": [
+                                                "response"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "invokeCode",
+                            "className": "io.toro.martini.GroovyMethods",
+                            "methodName": "savePackageProperty",
+                            "parameters": [
+                                "java.lang.String",
+                                "java.lang.String"
+                            ],
+                            "inputs": [
+                                {
+                                    "type": "set",
+                                    "expression": "init.default.data",
+                                    "to": [
+                                        "key"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "true",
+                                    "to": [
+                                        "value"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

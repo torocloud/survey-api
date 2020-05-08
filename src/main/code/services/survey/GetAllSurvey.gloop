@@ -1,0 +1,194 @@
+{
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": 200
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Survey",
+                    "type": "model",
+                    "array": true,
+                    "reference": "model.survey.Survey"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.survey.SelectAllSurvey",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectAllSurveyInputCursor",
+                                    "type": "model",
+                                    "array": true,
+                                    "gloopProperties": [
+                                        {
+                                            "name": "SURVEY_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "TITLE",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "DESCRIPTION",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "CREATED_DATE",
+                                            "type": "date",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "LAST_UPDATED",
+                                            "type": "date",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectAllSurveyInputCursor"
+                            ],
+                            "to": [
+                                "selectAllSurveyInputCursor"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "iterate",
+                    "input": {
+                        "path": [
+                            "selectAllSurveyInputCursor"
+                        ]
+                    },
+                    "output": {
+                        "path": [
+                            "response",
+                            "Survey"
+                        ]
+                    },
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "from": [
+                                        "selectAllSurveyInputCursor",
+                                        "SURVEY_ID"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Survey",
+                                        "survey_id"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllSurveyInputCursor",
+                                        "TITLE"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Survey",
+                                        "title"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllSurveyInputCursor",
+                                        "DESCRIPTION"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Survey",
+                                        "description"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllSurveyInputCursor",
+                                        "CREATED_DATE"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Survey",
+                                        "created_date"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllSurveyInputCursor",
+                                        "LAST_UPDATED"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Survey",
+                                        "last_updated"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

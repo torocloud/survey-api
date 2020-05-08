@@ -1,0 +1,38 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectQuestionTypeInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "question_type_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectQuestionTypeOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "QUESTION_TYPE_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "TYPE",
+                    "required": true,
+                    "allowNull": false
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT\n\t\"QUESTION_TYPE_ID\",\n\t\"TYPE\"\nFROM\n\t\"QUESTION_TYPE\"\n\tWHERE\n\t\t\"QUESTION_TYPE_ID\" = :question_type_id\n\t\t"
+}

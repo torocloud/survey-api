@@ -1,0 +1,12 @@
+{
+    "name": "QuestionType",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "question_type_id"
+        },
+        {
+            "name": "type"
+        }
+    ]
+}

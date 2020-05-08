@@ -1,0 +1,36 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "updateAnswerInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "question_id"
+                },
+                {
+                    "name": "answer"
+                },
+                {
+                    "name": "user_answer_count",
+                    "type": "integer"
+                },
+                {
+                    "name": "answer_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "UPDATE",
+    "query": "UPDATE \"ANSWER\"\nSET\n\t\"QUESTION_ID\" = COALESCE( :question_id, \"QUESTION_ID\" ),\n\t\"ANSWER\" = COALESCE( :answer, \"ANSWER\" ),\n\t\"USER_ANSWER_COUNT\" = COALESCE( :user_answer_count, \"USER_ANSWER_COUNT\" )\nWHERE\n\t\"ANSWER_ID\" = :answer_id"
+}

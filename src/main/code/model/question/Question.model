@@ -1,0 +1,31 @@
+{
+    "name": "Question",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "question_id",
+            "required": true
+        },
+        {
+            "name": "question"
+        },
+        {
+            "name": "survey_id"
+        },
+        {
+            "name": "question_type_id"
+        },
+        {
+            "name": "required",
+            "type": "boolean"
+        },
+        {
+            "name": "created_date",
+            "type": "date"
+        },
+        {
+            "name": "last_updated",
+            "type": "date"
+        }
+    ]
+}

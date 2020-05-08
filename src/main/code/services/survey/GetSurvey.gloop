@@ -1,0 +1,231 @@
+{
+    "input": [
+        {
+            "name": "survey_id",
+            "allowNull": false
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": 200
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Survey",
+                    "type": "model",
+                    "reference": "model.survey.Survey"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.survey.SelectSurvey",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectSurveyOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "SURVEY_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "TITLE",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "DESCRIPTION",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "CREATED_DATE",
+                                            "type": "date",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "LAST_UPDATED",
+                                            "type": "date",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "survey_id"
+                            ],
+                            "to": [
+                                "selectSurveyInput",
+                                "survey_id"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectSurveyOutput"
+                            ],
+                            "to": [
+                                "selectSurveyOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectSurveyOutput?.SURVEY_ID",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "$null",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "\"Survey with ID ${survey_id} not found.\"",
+                                            "evaluate": true,
+                                            "to": [
+                                                "error",
+                                                "message"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "404",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "$else",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "from": [
+                                                "selectSurveyOutput",
+                                                "SURVEY_ID"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Survey",
+                                                "survey_id"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectSurveyOutput",
+                                                "TITLE"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Survey",
+                                                "title"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectSurveyOutput",
+                                                "DESCRIPTION"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Survey",
+                                                "description"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectSurveyOutput",
+                                                "CREATED_DATE"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Survey",
+                                                "created_date"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectSurveyOutput",
+                                                "LAST_UPDATED"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Survey",
+                                                "last_updated"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

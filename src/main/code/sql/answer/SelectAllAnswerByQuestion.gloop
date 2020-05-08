@@ -1,0 +1,53 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllAnswerByQuestionInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                },
+                {
+                    "name": "question_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllAnswerByQuestionInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "ANSWER_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "QUESTION_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "ANSWER",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "USER_ANSWER_COUNT",
+                    "type": "integer",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT \n\t\"ANSWER_ID\",\n\t\"QUESTION_ID\",\n\t\"ANSWER\",\n\t\"USER_ANSWER_COUNT\"\nFROM\n\t\"ANSWER\"\nWHERE\n\t\"QUESTION_ID\" = :question_id\nORDER BY \"ANSWER_ID\" ASC"
+}

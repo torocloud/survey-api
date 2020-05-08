@@ -1,0 +1,299 @@
+{
+    "input": [
+        {
+            "name": "answer",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "id",
+                    "array": true
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "answer",
+                    "type": "model",
+                    "reference": "model.answer.Answer"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "updateCount",
+                                    "type": "integer"
+                                },
+                                {
+                                    "name": "individual_id"
+                                }
+                            ]
+                        }
+                    ],
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "0",
+                            "to": [
+                                "updateCount"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "answer.size() > 0",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "break",
+                                    "expression": "$gloopService"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "iterate",
+                    "input": {
+                        "path": [
+                            "answer"
+                        ]
+                    },
+                    "children": [
+                        {
+                            "type": "iterate",
+                            "input": {
+                                "path": [
+                                    "answer",
+                                    "id"
+                                ]
+                            },
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "sql.answer.SelectAnswer",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectAnswerOutput",
+                                                    "type": "model",
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "ANSWER_ID",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "QUESTION_ID",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "ANSWER",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "USER_ANSWER_COUNT",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "answer",
+                                                "id"
+                                            ],
+                                            "to": [
+                                                "selectAnswerInput",
+                                                "answer_id"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectAnswerOutput"
+                                            ],
+                                            "to": [
+                                                "selectAnswerOutput"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "sql.answer.UpdateAnswer",
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "answer",
+                                                "id"
+                                            ],
+                                            "to": [
+                                                "updateAnswerInput",
+                                                "answer_id"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "selectAnswerOutput.USER_ANSWER_COUNT + 1",
+                                            "evaluate": true,
+                                            "to": [
+                                                "updateAnswerInput",
+                                                "user_answer_count"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "updateCount + $gloopOutput.updateCount",
+                                            "evaluate": true,
+                                            "to": [
+                                                "updateCount"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "updateCount > 0",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "Successfully added user answer/s.",
+                                            "to": [
+                                                "response",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "$else",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "Failed to add user answer/s.",
+                                    "to": [
+                                        "error",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

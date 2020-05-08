@@ -1,0 +1,48 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAnswerInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "answer_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAnswerOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "ANSWER_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "QUESTION_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "ANSWER",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "USER_ANSWER_COUNT",
+                    "type": "integer",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT\n\t\"ANSWER_ID\",\n\t\"QUESTION_ID\",\n\t\"ANSWER\",\n\t\"USER_ANSWER_COUNT\"\nFROM\n\t\"ANSWER\"\n\tWHERE\n\t\t\"ANSWER_ID\" = :answer_id\n\t\t"
+}

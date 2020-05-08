@@ -1,0 +1,633 @@
+{
+    "info": {
+        "version": "1.0.0"
+    },
+    "basePath": "/sm",
+    "paths": {
+        "/answer": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Retrieves all answer"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.GetAllAnswer",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "answer",
+                    "description": "answer"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Updated answer"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "answer_id is empty"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to update answer"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.UpdateAnswer",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "answer",
+                    "description": "answer"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Added answer"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to add answer"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.AddAnswer",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/answer/{answer_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "answer_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Answer exists"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "Answer does not exist"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to retrieve answer"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.GetAnswer",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "answer_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Deleted answer"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to delete answer"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.DeleteAnswer",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/question": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Retrieves all question"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.GetAllQuestion",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "question",
+                    "description": "question"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Updated question"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "question_id is empty"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to update question"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.UpdateQuestion",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "question",
+                    "description": "question"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Added question"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to add question"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.AddQuestion",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/question/{question_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "question_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Question exists"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "Question does not exist"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to retrieve question"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.GetQuestion",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "question_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Deleted question"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to delete question"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.DeleteQuestion",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/question/{question_id}/answers": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "question_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "200 Response"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.GetAllAnswerByQuestion",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/question_type": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Retrieves all question_type"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.QuestionType.GetAllQuestionType",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "question_type",
+                    "description": "question_type"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Updated question_type"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "question_type_id is empty"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to update question_type"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.QuestionType.UpdateQuestionType",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "question_type",
+                    "description": "question_type"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Added question_type"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to add question_type"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.QuestionType.AddQuestionType",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/question_type/{question_type_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "question_type_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Question_type exists"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "Question_type does not exist"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to retrieve question_type"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.QuestionType.GetQuestionType",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "question_type_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Deleted question_type"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to delete question_type"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.QuestionType.DeleteQuestionType",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/survey": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Retrieves all survey"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.survey.GetAllSurvey",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "survey",
+                    "description": "survey"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Updated survey"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "survey_id is empty"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to update survey"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.survey.UpdateSurvey",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "survey",
+                    "description": "survey"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Added survey"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to add survey"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.survey.AddSurvey",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/survey/{survey_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "survey_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Survey exists"
+                    },
+                    "400": {
+                        "body": "error",
+                        "description": "Survey does not exist"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to retrieve survey"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.survey.GetSurvey",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "survey_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Deleted survey"
+                    },
+                    "404": {
+                        "body": "error",
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Failed to delete survey"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.survey.DeleteSurvey",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/survey/{survey_id}/questions": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "survey_id",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "Retrieves all question"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.question.GetAllQuestionsBySurvey",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/survey-answer": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "answer",
+                    "description": "answer"
+                },
+                "responses": {
+                    "200": {
+                        "body": "response",
+                        "description": "User answer has been counted"
+                    },
+                    "500": {
+                        "body": "error",
+                        "description": "Error occured"
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "services.answer.IncrementUserAnswerCount",
+                "responseCodeField": "responseCode"
+            }
+        }
+    }
+}

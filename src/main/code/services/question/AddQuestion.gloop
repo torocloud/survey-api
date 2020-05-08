@@ -1,0 +1,251 @@
+{
+    "input": [
+        {
+            "name": "question",
+            "type": "model",
+            "reference": "model.question.Question"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": 200
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Question",
+                    "type": "model",
+                    "reference": "model.question.Question"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "UUID.randomUUID()",
+                            "evaluate": true,
+                            "to": [
+                                "question",
+                                "question_id"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.question.InsertQuestion",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "updateCount",
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "question",
+                                "question"
+                            ],
+                            "to": [
+                                "insertQuestionInput",
+                                "question"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "question",
+                                "question_type_id"
+                            ],
+                            "to": [
+                                "insertQuestionInput",
+                                "question_type_id"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "question",
+                                "survey_id"
+                            ],
+                            "to": [
+                                "insertQuestionInput",
+                                "survey_id"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "question",
+                                "question_id"
+                            ],
+                            "to": [
+                                "insertQuestionInput",
+                                "question_id"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "now",
+                            "to": [
+                                "insertQuestionInput",
+                                "created_date"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "question.required ? 1 : 0",
+                            "evaluate": true,
+                            "to": [
+                                "insertQuestionInput",
+                                "required"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "updateCount"
+                            ],
+                            "to": [
+                                "updateCount"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "updateCount > 0",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "services.question.GetQuestion",
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "question",
+                                                "question_id"
+                                            ],
+                                            "to": [
+                                                "question_id"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "response"
+                                            ],
+                                            "to": [
+                                                "response"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "responseCode"
+                                            ],
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "error"
+                                            ],
+                                            "to": [
+                                                "error"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "Failed to create Question",
+                                            "to": [
+                                                "error",
+                                                "message"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "500",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "break",
+                                    "expression": "$gloopService"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

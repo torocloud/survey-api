@@ -1,0 +1,207 @@
+{
+    "input": [
+        {
+            "name": "answer",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "answer_id"
+                },
+                {
+                    "name": "question_id"
+                },
+                {
+                    "name": "answer"
+                },
+                {
+                    "name": "user_answer_count",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "answer",
+                    "type": "model",
+                    "reference": "model.answer.Answer"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "fork",
+                    "expression": "answer.answer_id",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "$null",
+                            "children": [
+                                {
+                                    "type": "break",
+                                    "expression": "$gloopService"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.answer.UpdateAnswer",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "updateCount",
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "answer",
+                                "answer_id"
+                            ],
+                            "to": [
+                                "updateAnswerInput",
+                                "answer_id"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "answer",
+                                "question_id"
+                            ],
+                            "to": [
+                                "updateAnswerInput",
+                                "question_id"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "answer",
+                                "answer"
+                            ],
+                            "to": [
+                                "updateAnswerInput",
+                                "answer"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "answer",
+                                "user_answer_count"
+                            ],
+                            "to": [
+                                "updateAnswerInput",
+                                "user_answer_count"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "updateCount"
+                            ],
+                            "to": [
+                                "updateCount"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "updateCount > 0",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "Successfully updated answer.",
+                                            "to": [
+                                                "response",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "$else",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "Failed to update answer with id ${answer.answer_id}",
+                                    "evaluate": true,
+                                    "to": [
+                                        "error",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

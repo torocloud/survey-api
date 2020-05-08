@@ -1,0 +1,46 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "insertAnswerInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$getGeneratedKeys",
+                    "type": "boolean",
+                    "defaultValue": false
+                },
+                {
+                    "name": "answer_id"
+                },
+                {
+                    "name": "question_id"
+                },
+                {
+                    "name": "answer"
+                },
+                {
+                    "name": "user_answer_count",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        },
+        {
+            "name": "generatedKeys",
+            "type": "model",
+            "allowExtraProperties": true
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "INSERT",
+    "query": "INSERT INTO \"ANSWER\" (\n\t\"ANSWER_ID\",\n\t\"QUESTION_ID\",\n\t\"ANSWER\",\n\t\"USER_ANSWER_COUNT\"\n)\n\tVALUES (\n\t:answer_id,\n\t:question_id,\n\t:answer,\n\t:user_answer_count\n)"
+}

@@ -1,0 +1,24 @@
+{
+    "name": "Survey",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "survey_id",
+            "required": true
+        },
+        {
+            "name": "title"
+        },
+        {
+            "name": "description"
+        },
+        {
+            "name": "created_date",
+            "type": "date"
+        },
+        {
+            "name": "last_updated",
+            "type": "date"
+        }
+    ]
+}

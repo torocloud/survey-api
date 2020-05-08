@@ -1,0 +1,26 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "deleteAnswerInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "answer_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "DELETE",
+    "query": "DELETE FROM \"ANSWER\"\nWHERE\n\t\"ANSWER_ID\" = :answer_id"
+}

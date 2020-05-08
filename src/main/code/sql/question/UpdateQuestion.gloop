@@ -1,0 +1,47 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "updateQuestionInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "question"
+                },
+                {
+                    "name": "survey_id"
+                },
+                {
+                    "name": "question_type_id"
+                },
+                {
+                    "name": "required",
+                    "type": "integer"
+                },
+                {
+                    "name": "created_date",
+                    "type": "date"
+                },
+                {
+                    "name": "last_updated",
+                    "type": "date"
+                },
+                {
+                    "name": "question_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "UPDATE",
+    "query": "UPDATE \"QUESTION\"\nSET\n\t\"QUESTION\" = COALESCE( :question, \"QUESTION\" ),\n\t\"SURVEY_ID\" = COALESCE ( :survey_id, \"SURVEY_ID\" ),\n\t\"QUESTION_TYPE_ID\" = COALESCE( :question_type_id, \"QUESTION_TYPE_ID\" ),\n\t\"REQUIRED\" = COALESCE( :required, \"REQUIRED\" ),\n\t\"CREATED_DATE\" = COALESCE( :created_date, \"CREATED_DATE\" ),\n\t\"LAST_UPDATED\" = COALESCE( :last_updated, \"LAST_UPDATED\" )\nWHERE\n\t\"QUESTION_ID\" = :question_id"
+}

@@ -1,0 +1,264 @@
+{
+    "input": [
+        {
+            "name": "question_id",
+            "allowNull": false
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": 200
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Question",
+                    "type": "model",
+                    "reference": "model.question.Question"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.question.SelectQuestion",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectQuestionOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "QUESTION_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "QUESTION",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "SURVEY_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "QUESTION_TYPE_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "REQUIRED",
+                                            "type": "boolean",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "CREATED_DATE",
+                                            "type": "date",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "LAST_UPDATED",
+                                            "type": "date",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "question_id"
+                            ],
+                            "to": [
+                                "selectQuestionInput",
+                                "question_id"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectQuestionOutput"
+                            ],
+                            "to": [
+                                "selectQuestionOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectQuestionOutput?.QUESTION_ID",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "$null",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "\"Question with ID ${question_id} not found.\"",
+                                            "evaluate": true,
+                                            "to": [
+                                                "error",
+                                                "message"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "404",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "$else",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "QUESTION_ID"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "question_id"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "QUESTION"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "question"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "QUESTION_TYPE_ID"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "question_type_id"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "CREATED_DATE"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "created_date"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "LAST_UPDATED"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "last_updated"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "SURVEY_ID"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "survey_id"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectQuestionOutput",
+                                                "REQUIRED"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Question",
+                                                "required"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

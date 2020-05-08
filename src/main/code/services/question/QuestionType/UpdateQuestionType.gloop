@@ -1,0 +1,180 @@
+{
+    "input": [
+        {
+            "name": "question_type",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "question_type_id"
+                },
+                {
+                    "name": "type"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "question_type",
+                    "type": "model",
+                    "reference": "model.question.QuestionType"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "fork",
+                    "expression": "question_type.question_type_id",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "$null",
+                            "children": [
+                                {
+                                    "type": "break",
+                                    "expression": "$gloopService"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.question.QuestionType.UpdateQuestionType",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "updateCount",
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "question_type",
+                                "question_type_id"
+                            ],
+                            "to": [
+                                "updateQuestionTypeInput",
+                                "question_type_id"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "question_type",
+                                "type"
+                            ],
+                            "to": [
+                                "updateQuestionTypeInput",
+                                "type"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "updateCount"
+                            ],
+                            "to": [
+                                "updateCount"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "updateCount > 0",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "Successfully updated question_type.",
+                                            "to": [
+                                                "response",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "$else",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "Failed to update question_type with id ${question_type.question_type_id}",
+                                    "evaluate": true,
+                                    "to": [
+                                        "error",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

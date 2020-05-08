@@ -1,0 +1,40 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllQuestionTypeInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllQuestionTypeInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "QUESTION_TYPE_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "TYPE",
+                    "required": true,
+                    "allowNull": false
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT\n\t\"QUESTION_TYPE_ID\",\n\t\"TYPE\"\nFROM\n\t\"QUESTION_TYPE\""
+}

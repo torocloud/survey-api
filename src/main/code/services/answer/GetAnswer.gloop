@@ -1,0 +1,215 @@
+{
+    "input": [
+        {
+            "name": "answer_id",
+            "allowNull": false
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": 200
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Answer",
+                    "type": "model",
+                    "reference": "model.answer.Answer"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.answer.SelectAnswer",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectAnswerOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "ANSWER_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "QUESTION_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "ANSWER",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "USER_ANSWER_COUNT",
+                                            "type": "integer",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "answer_id"
+                            ],
+                            "to": [
+                                "selectAnswerInput",
+                                "answer_id"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectAnswerOutput"
+                            ],
+                            "to": [
+                                "selectAnswerOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectAnswerOutput?.ANSWER_ID",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "$null",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "\"Answer with ID ${answer_id} not found.\"",
+                                            "evaluate": true,
+                                            "to": [
+                                                "error",
+                                                "message"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "404",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "$else",
+                            "children": [
+                                {
+                                    "lines": [
+                                        {
+                                            "from": [
+                                                "selectAnswerOutput",
+                                                "ANSWER_ID"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Answer",
+                                                "answer_id"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectAnswerOutput",
+                                                "QUESTION_ID"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Answer",
+                                                "question_id"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectAnswerOutput",
+                                                "ANSWER"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Answer",
+                                                "answer"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "selectAnswerOutput",
+                                                "USER_ANSWER_COUNT"
+                                            ],
+                                            "to": [
+                                                "response",
+                                                "Answer",
+                                                "user_answer_count"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

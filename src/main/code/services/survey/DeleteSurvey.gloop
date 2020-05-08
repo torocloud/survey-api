@@ -1,0 +1,122 @@
+{
+    "input": [
+        {
+            "name": "survey_id"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Survey",
+                    "type": "model",
+                    "reference": "model.survey.Survey"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "invokeGloop",
+            "name": "sql.survey.DeleteSurvey",
+            "declare": [
+                {
+                    "variables": [
+                        {
+                            "name": "updateCount",
+                            "type": "integer"
+                        }
+                    ]
+                }
+            ],
+            "inputs": [
+                {
+                    "from": [
+                        "survey_id"
+                    ],
+                    "to": [
+                        "deleteSurveyInput",
+                        "survey_id"
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "from": [
+                        "updateCount"
+                    ],
+                    "to": [
+                        "updateCount"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "fork",
+            "expression": "updateCount > 0",
+            "children": [
+                {
+                    "type": "block",
+                    "label": "true",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "from": [
+                                        "survey_id"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Survey",
+                                        "survey_id"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Successfully deleted survey.",
+                                    "to": [
+                                        "response",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "$else",
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "Failed to delete survey.",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

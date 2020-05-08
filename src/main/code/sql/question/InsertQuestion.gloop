@@ -1,0 +1,57 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "insertQuestionInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$getGeneratedKeys",
+                    "type": "boolean",
+                    "defaultValue": false
+                },
+                {
+                    "name": "question_id"
+                },
+                {
+                    "name": "question"
+                },
+                {
+                    "name": "survey_id"
+                },
+                {
+                    "name": "question_type_id"
+                },
+                {
+                    "name": "required",
+                    "type": "integer"
+                },
+                {
+                    "name": "created_date",
+                    "type": "date"
+                },
+                {
+                    "name": "last_updated",
+                    "type": "date"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        },
+        {
+            "name": "generatedKeys",
+            "type": "model",
+            "allowExtraProperties": true
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "INSERT",
+    "query": "INSERT INTO \"QUESTION\" (\n\t\"QUESTION_ID\",\n\t\"QUESTION\",\n\t\"SURVEY_ID\",\n\t\"QUESTION_TYPE_ID\",\n\t\"REQUIRED\",\n\t\"CREATED_DATE\",\n\t\"LAST_UPDATED\"\n)\n\tVALUES (\n\t:question_id,\n\t:question,\n\t:survey_id,\n\t:question_type_id,\n\t:required,\n\t:created_date,\n\t:last_updated\n)"
+}

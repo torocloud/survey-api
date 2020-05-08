@@ -1,0 +1,40 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "updateSurveyInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "title"
+                },
+                {
+                    "name": "description"
+                },
+                {
+                    "name": "created_date",
+                    "type": "date"
+                },
+                {
+                    "name": "last_updated",
+                    "type": "date"
+                },
+                {
+                    "name": "survey_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "UPDATE",
+    "query": "UPDATE \"SURVEY\"\nSET\n\t\"TITLE\" = COALESCE( :title, \"TITLE\" ),\n\t\"DESCRIPTION\" = COALESCE( :description, \"DESCRIPTION\" ),\n\t\"CREATED_DATE\" = COALESCE( :created_date, \"CREATED_DATE\" ),\n\t\"LAST_UPDATED\" = COALESCE( :last_updated, \"LAST_UPDATED\" )\nWHERE\n\t\"SURVEY_ID\" = :survey_id"
+}

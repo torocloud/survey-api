@@ -1,0 +1,8 @@
+<package stateOnStartup="started" id="survey-api" version="1.0.0" context-path="/survey-api">
+  <package-dependencies/>
+  <startup-services>
+    <startup-service>gloop:conf.CreateDatabase/conf.CreateDatabase</startup-service>
+    <startup-service>gloop:conf.InitDefaultData/conf.InitDefaultData</startup-service>
+  </startup-services>
+  <shutdown-services/>
+</package>

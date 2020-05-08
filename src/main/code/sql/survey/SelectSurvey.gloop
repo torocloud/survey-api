@@ -1,0 +1,53 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectSurveyInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "survey_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectSurveyOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "SURVEY_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "TITLE",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "DESCRIPTION",
+                    "required": true
+                },
+                {
+                    "name": "CREATED_DATE",
+                    "type": "date",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "LAST_UPDATED",
+                    "type": "date",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT\n\t\"SURVEY_ID\",\n\t\"TITLE\",\n\t\"DESCRIPTION\",\n\t\"CREATED_DATE\",\n\t\"LAST_UPDATED\"\nFROM\n\t\"SURVEY\"\n\tWHERE\n\t\t\"SURVEY_ID\" = :survey_id\n\t\t"
+}

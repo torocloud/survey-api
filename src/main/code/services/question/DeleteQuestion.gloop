@@ -1,0 +1,122 @@
+{
+    "input": [
+        {
+            "name": "question_id"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Question",
+                    "type": "model",
+                    "reference": "model.question.Question"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "invokeGloop",
+            "name": "sql.question.DeleteQuestion",
+            "declare": [
+                {
+                    "variables": [
+                        {
+                            "name": "updateCount",
+                            "type": "integer"
+                        }
+                    ]
+                }
+            ],
+            "inputs": [
+                {
+                    "from": [
+                        "question_id"
+                    ],
+                    "to": [
+                        "deleteQuestionInput",
+                        "question_id"
+                    ]
+                }
+            ],
+            "outputs": [
+                {
+                    "from": [
+                        "updateCount"
+                    ],
+                    "to": [
+                        "updateCount"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "fork",
+            "expression": "updateCount > 0",
+            "children": [
+                {
+                    "type": "block",
+                    "label": "true",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "from": [
+                                        "question_id"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Question",
+                                        "question_id"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Successfully deleted question.",
+                                    "to": [
+                                        "response",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "$else",
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "Failed to delete question.",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

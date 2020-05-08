@@ -1,0 +1,64 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectQuestionInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "question_id"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectQuestionOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "QUESTION_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "QUESTION",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "SURVEY_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "QUESTION_TYPE_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "REQUIRED",
+                    "type": "boolean",
+                    "required": true
+                },
+                {
+                    "name": "CREATED_DATE",
+                    "type": "date",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "LAST_UPDATED",
+                    "type": "date",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT\n\t\"QUESTION_ID\",\n\t\"QUESTION\",\n\t\"SURVEY_ID\",\n\t\"QUESTION_TYPE_ID\",\n\t\"REQUIRED\",\n\t\"CREATED_DATE\",\n\t\"LAST_UPDATED\"\nFROM\n\t\"QUESTION\"\n\tWHERE\n\t\t\"QUESTION_ID\" = :question_id\n\t\t"
+}

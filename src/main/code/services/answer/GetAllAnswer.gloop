@@ -1,0 +1,178 @@
+{
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": 200
+        },
+        {
+            "name": "response",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "Answer",
+                    "type": "model",
+                    "array": true,
+                    "reference": "model.answer.Answer"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "sql.answer.SelectAllAnswer",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectAllAnswerInputCursor",
+                                    "type": "model",
+                                    "array": true,
+                                    "gloopProperties": [
+                                        {
+                                            "name": "ANSWER_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "QUESTION_ID",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "ANSWER",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "USER_ANSWER_COUNT",
+                                            "type": "integer",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectAllAnswerInputCursor"
+                            ],
+                            "to": [
+                                "selectAllAnswerInputCursor"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "iterate",
+                    "input": {
+                        "path": [
+                            "selectAllAnswerInputCursor"
+                        ]
+                    },
+                    "output": {
+                        "path": [
+                            "response",
+                            "Answer"
+                        ]
+                    },
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "from": [
+                                        "selectAllAnswerInputCursor",
+                                        "ANSWER_ID"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Answer",
+                                        "answer_id"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllAnswerInputCursor",
+                                        "QUESTION_ID"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Answer",
+                                        "question_id"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllAnswerInputCursor",
+                                        "ANSWER"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Answer",
+                                        "answer"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "selectAllAnswerInputCursor",
+                                        "USER_ANSWER_COUNT"
+                                    ],
+                                    "to": [
+                                        "response",
+                                        "Answer",
+                                        "user_answer_count"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "lines": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "message"
+                            ],
+                            "to": [
+                                "error",
+                                "errorMessages",
+                                "message"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "500",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Internal Server Error occured",
+                            "to": [
+                                "error",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

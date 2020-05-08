@@ -1,0 +1,55 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllSurveyInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllSurveyInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "SURVEY_ID",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "TITLE",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "DESCRIPTION",
+                    "required": true
+                },
+                {
+                    "name": "CREATED_DATE",
+                    "type": "date",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "LAST_UPDATED",
+                    "type": "date",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "survey",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT\n\t\"SURVEY_ID\",\n\t\"TITLE\",\n\t\"DESCRIPTION\",\n\t\"CREATED_DATE\",\n\t\"LAST_UPDATED\"\nFROM\n\t\"SURVEY\"\nORDER BY \"CREATED_DATE\" ASC"
+}
